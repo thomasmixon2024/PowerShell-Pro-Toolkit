@@ -134,47 +134,17 @@ MIT License - See LICENSE file for details.
 
 
 
-═══════════════════════════════════════════════════════════════
-
-⭐ SHOW SOME LOVE! ⭐
-
-═══════════════════════════════════════════════════════════════
-
-
-
-&#x20; ╔═══════════════════════════════════════════════════════════════╗
-
-║  ║     ⭐ STAR THIS REPO IF YOU LOVE IT! ⭐                    ║
-
-║  ║     🍴 FORK IT IF YOU WANT TO CONTRIBUTE! 🍴                ║
-
-║  ║     👀 WATCH IT FOR UPDATES! 👀                             ║
-
-║  ║     🔥 SHARE IT WITH YOUR FRIENDS! 🔥                       ║
-
-║  ║     💀 USE IT TO DESTROY BAD CODE! 💀                       ║
-
-║  ║     🚀 SHIP AMAZING POWERSHELL! 🚀                          ║
-
-&#x20; ╚═══════════════════════════════════════════════════════════════╝
-
-
-
 <div align="center">
 
-
-
-<sub>
-
-
-
-Built with ❤️ and lots of ☕ by Thomas Mixon
-
-
-
-</sub> 
-
-
-
-<br> <sub>📦 ONE FILE - THAT'S ALL IT TAKES! 📦</sub> </div> ```
-
+markdown
+## ═══════════════════════════════════════════════════════════════
+##  ⭐  SHOW SOME LOVE!  ⭐
+## ═══════════════════════════════════════════════════════════════
+╔═══════════════════════════════════════════════════════════════╗
+║ ⭐ STAR THIS REPO IF YOU LOVE IT! ⭐ ║
+║ 🍴 FORK IT IF YOU WANT TO CONTRIBUTE! 🍴 ║
+║ 👀 WATCH IT FOR UPDATES! 👀 ║
+║ 🔥 SHARE IT WITH YOUR FRIENDS! 🔥 ║
+║ 💀 USE IT TO DESTROY BAD CODE! 💀 ║
+║ 🚀 SHIP AMAZING POWERSHELL! 🚀 ║
+╚═══════════════════════════════════════════════════════════════╝
