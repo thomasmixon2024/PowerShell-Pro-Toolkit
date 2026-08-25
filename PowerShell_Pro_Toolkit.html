@@ -1,0 +1,2211 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>PowerShell Pro Toolkit - Complete</title>
+    <style>
+        /* ============================================================
+           COMPLETE STYLES (all previous styles included)
+           ============================================================ */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Cascadia Code', 'Fira Code', 'Consolas', 'Courier New', monospace;
+            background-color: #0a0e17;
+            color: #e6edf3;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+            transition: background-color 0.4s ease;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: #0d1117;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(0, 150, 255, 0.1);
+            border: 1px solid #1c2333;
+            transition: all 0.4s ease;
+        }
+
+        h1 {
+            color: #58a6ff;
+            font-size: 2.5em;
+            border-bottom: 3px solid #58a6ff;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            text-shadow: 0 0 20px rgba(88, 166, 255, 0.3);
+            transition: all 0.4s ease;
+        }
+
+        /* THEME VARIABLES */
+        :root {
+            --theme-primary: #58a6ff;
+            --theme-secondary: #1f6feb;
+            --theme-glow: rgba(88, 166, 255, 0.3);
+            --theme-border: #1c2333;
+            --theme-accent: #3fb950;
+        }
+
+        body.theme-analysis {
+            --theme-primary: #58a6ff;
+            --theme-secondary: #1f6feb;
+            --theme-glow: rgba(88, 166, 255, 0.3);
+            --theme-accent: #3fb950;
+        }
+        body.theme-debug {
+            --theme-primary: #3fb950;
+            --theme-secondary: #238636;
+            --theme-glow: rgba(63, 185, 80, 0.3);
+            --theme-accent: #58a6ff;
+        }
+        body.theme-metrics {
+            --theme-primary: #d2a8ff;
+            --theme-secondary: #8957e5;
+            --theme-glow: rgba(210, 168, 255, 0.3);
+            --theme-accent: #58a6ff;
+        }
+
+        body.theme-analysis .container {
+            border-color: #58a6ff;
+            box-shadow: 0 0 40px rgba(88, 166, 255, 0.15);
+        }
+        body.theme-debug .container {
+            border-color: #3fb950;
+            box-shadow: 0 0 40px rgba(63, 185, 80, 0.15);
+        }
+        body.theme-metrics .container {
+            border-color: #d2a8ff;
+            box-shadow: 0 0 40px rgba(210, 168, 255, 0.15);
+        }
+        body.theme-analysis h1 {
+            color: #58a6ff;
+            border-bottom-color: #58a6ff;
+        }
+        body.theme-debug h1 {
+            color: #3fb950;
+            border-bottom-color: #3fb950;
+        }
+        body.theme-metrics h1 {
+            color: #d2a8ff;
+            border-bottom-color: #d2a8ff;
+        }
+
+        /* TAB NAVIGATION */
+        .tab-nav {
+            display: flex;
+            gap: 4px;
+            border-bottom: 2px solid var(--theme-border);
+            margin-bottom: 25px;
+            padding-bottom: 0;
+            transition: border-color 0.4s ease;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: #8b949e;
+            padding: 12px 24px;
+            font-family: inherit;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s ease;
+            border-bottom: 3px solid transparent;
+            position: relative;
+            font-weight: 500;
+        }
+        .tab-btn:hover:not(:disabled) {
+            color: #e6edf3;
+            background: #161b22;
+        }
+        .tab-btn.active {
+            color: var(--theme-primary);
+            border-bottom-color: var(--theme-primary);
+        }
+        .tab-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        .tab-btn .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            margin-left: 6px;
+        }
+        .tab-btn .badge-info {
+            background: var(--theme-primary);
+            color: white;
+            transition: background 0.4s ease;
+        }
+        .tab-btn .badge-beta {
+            background: var(--theme-secondary);
+            color: white;
+            font-size: 0.6rem;
+            padding: 1px 6px;
+        }
+
+        .tab-pane {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        .tab-pane.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* CHEATSHEET PANEL */
+        .cheatsheet-panel {
+            background: rgba(13, 17, 23, 0.8);
+            border: 1px solid var(--theme-border);
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            transition: all 0.4s ease;
+            border-left: 4px solid var(--theme-primary);
+        }
+        .cheatsheet-panel h3 {
+            color: var(--theme-primary);
+            margin-bottom: 8px;
+            font-size: 1rem;
+            transition: color 0.4s ease;
+        }
+        .cheatsheet-panel .cheatsheet-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 8px;
+        }
+        .cheatsheet-panel .cheat-item {
+            font-size: 0.85rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .cheatsheet-panel .cheat-item .cmd {
+            color: var(--theme-primary);
+            font-weight: bold;
+        }
+        .cheatsheet-panel .cheat-item .desc {
+            color: #8b949e;
+            font-size: 0.75rem;
+        }
+
+        /* CODE EDITOR */
+        .code-editor-wrapper {
+            display: flex;
+            border: 1px solid var(--theme-border);
+            border-radius: 8px;
+            overflow: hidden;
+            background: #0a0e17;
+            transition: border-color 0.4s ease;
+            position: relative;
+            max-height: 400px;
+        }
+
+        .line-numbers {
+            background: #0d1117;
+            color: #8b949e;
+            padding: 15px 10px;
+            text-align: right;
+            user-select: none;
+            min-width: 50px;
+            border-right: 1px solid var(--theme-border);
+            font-family: 'Cascadia Code', 'Fira Code', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            white-space: pre;
+            overflow-y: auto;
+            max-height: 400px;
+            scrollbar-width: thin;
+            transition: border-color 0.4s ease;
+        }
+        .line-numbers::-webkit-scrollbar {
+            width: 4px;
+        }
+        .line-numbers::-webkit-scrollbar-track {
+            background: #0d1117;
+        }
+        .line-numbers::-webkit-scrollbar-thumb {
+            background: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        .line-numbers .line-number {
+            display: block;
+            padding: 0 4px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            transition: background 0.2s, color 0.2s;
+            cursor: help;
+            position: relative;
+        }
+        .line-numbers .line-number:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .line-numbers .line-number.highlight-line {
+            background: rgba(88, 166, 255, 0.15);
+            border-left: 3px solid #58a6ff;
+            padding-left: 1px;
+            color: #58a6ff;
+        }
+        .line-numbers .line-number.highlight-line-error {
+            background: rgba(218, 54, 51, 0.2);
+            border-left: 3px solid #da3633;
+            padding-left: 1px;
+            color: #f85149;
+        }
+        .line-numbers .line-number.highlight-line-warning {
+            background: rgba(210, 153, 34, 0.2);
+            border-left: 3px solid #d29922;
+            padding-left: 1px;
+            color: #d29922;
+        }
+        .line-numbers .line-number.highlight-line-info {
+            background: rgba(88, 166, 255, 0.1);
+            border-left: 3px solid #58a6ff;
+            padding-left: 1px;
+            color: #58a6ff;
+        }
+        .line-numbers .line-number.highlight-line-style {
+            background: rgba(210, 168, 255, 0.1);
+            border-left: 3px solid #d2a8ff;
+            padding-left: 1px;
+            color: #d2a8ff;
+        }
+        .line-numbers .line-number.breakpoint-line {
+            color: #da3633;
+            font-weight: bold;
+        }
+        .line-numbers .line-number.execution-line {
+            background: rgba(63, 185, 80, 0.25);
+            border-left: 3px solid #3fb950;
+            padding-left: 1px;
+            color: #3fb950;
+            font-weight: bold;
+        }
+        .line-numbers .line-number.search-match {
+            background: rgba(210, 153, 34, 0.3);
+            border-left: 3px solid #d29922;
+            padding-left: 1px;
+            color: #d29922;
+        }
+        .line-numbers .line-number.search-match-highlight {
+            background: rgba(210, 153, 34, 0.5);
+            border-left: 3px solid #f0883e;
+            padding-left: 1px;
+            color: #f0883e;
+            font-weight: bold;
+        }
+
+        .code-editor {
+            flex: 1;
+            position: relative;
+        }
+        .code-editor textarea {
+            width: 100%;
+            min-height: 200px;
+            background: #0a0e17;
+            color: #e6edf3;
+            border: none;
+            padding: 15px;
+            font-family: 'Cascadia Code', 'Fira Code', monospace;
+            font-size: 0.95rem;
+            resize: vertical;
+            line-height: 1.6;
+            tab-size: 4;
+            outline: none;
+            overflow-y: auto;
+            max-height: 400px;
+            scrollbar-width: thin;
+        }
+        .code-editor textarea::-webkit-scrollbar {
+            width: 8px;
+        }
+        .code-editor textarea::-webkit-scrollbar-track {
+            background: #0a0e17;
+        }
+        .code-editor textarea::-webkit-scrollbar-thumb {
+            background: var(--theme-primary);
+            border-radius: 4px;
+        }
+        .code-editor textarea:focus {
+            outline: none;
+        }
+        .code-editor textarea:disabled {
+            opacity: 0.7;
+        }
+
+        /* SEARCH */
+        .search-container {
+            display: flex;
+            gap: 12px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .search-container .search-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: #0d1117;
+            border: 1px solid var(--theme-border);
+            border-radius: 6px;
+            padding: 4px 10px;
+            transition: border-color 0.3s ease;
+            flex: 1;
+            min-width: 150px;
+        }
+        .search-container .search-group:focus-within {
+            border-color: var(--theme-primary);
+            box-shadow: 0 0 10px var(--theme-glow);
+        }
+        .search-container .search-group label {
+            color: #8b949e;
+            font-size: 0.8rem;
+            white-space: nowrap;
+        }
+        .search-container .search-group input {
+            background: transparent;
+            border: none;
+            color: #e6edf3;
+            font-family: inherit;
+            font-size: 0.9rem;
+            padding: 6px 4px;
+            outline: none;
+            width: 100%;
+            min-width: 80px;
+        }
+        .search-container .search-group input::placeholder {
+            color: #8b949e;
+            font-size: 0.8rem;
+        }
+        .search-container .search-group .search-count {
+            color: #8b949e;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            padding: 0 4px;
+        }
+        .search-container .btn-search-nav {
+            background: #161b22;
+            border: 1px solid var(--theme-border);
+            color: #e6edf3;
+            padding: 4px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.85rem;
+            transition: 0.2s;
+            min-width: 30px;
+        }
+        .search-container .btn-search-nav:hover {
+            border-color: var(--theme-primary);
+            background: #1c2333;
+        }
+        .search-container .btn-search-nav:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        /* DROP ZONE */
+        .drop-zone {
+            border: 2px dashed var(--theme-border);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            color: #8b949e;
+            margin-top: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .drop-zone:hover {
+            border-color: var(--theme-primary);
+            background: #161b22;
+        }
+        .drop-zone.dragover {
+            border-color: var(--theme-primary);
+            background: #1c2333;
+        }
+
+        .file-info {
+            color: #8b949e;
+            font-size: 0.85rem;
+            margin-top: 6px;
+        }
+
+        /* ACTION GRID */
+        .action-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 18px 0 12px 0;
+            align-items: center;
+        }
+        .action-grid label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: #161b22;
+            padding: 8px 16px;
+            border-radius: 30px;
+            cursor: pointer;
+            border: 1px solid var(--theme-border);
+            transition: 0.15s;
+            font-size: 0.9rem;
+        }
+        .action-grid label:hover {
+            border-color: var(--theme-primary);
+            background: #1c2333;
+        }
+        .action-grid input[type="radio"] {
+            accent-color: var(--theme-primary);
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+        .action-grid .operation-desc {
+            color: #8b949e;
+            font-size: 0.8rem;
+            margin-left: 4px;
+        }
+
+        .btn-process {
+            background: var(--theme-secondary);
+            border: none;
+            color: white;
+            padding: 10px 28px;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            margin-top: 6px;
+        }
+        .btn-process:hover {
+            filter: brightness(1.2);
+            transform: scale(1.02);
+        }
+        .btn-process:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-export {
+            background: var(--theme-secondary);
+            border: none;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            margin: 4px 4px 4px 0;
+        }
+        .btn-export:hover {
+            filter: brightness(1.2);
+        }
+
+        .output-box {
+            background: #0a0e17;
+            border: 1px solid var(--theme-border);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 18px;
+            max-height: 350px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            font-family: 'Cascadia Code', 'Fira Code', monospace;
+            font-size: 0.9rem;
+            color: #e6edf3;
+            transition: border-color 0.4s ease;
+        }
+        .output-box .info { color: var(--theme-primary); }
+        .output-box .warn { color: #d29922; }
+        .output-box .err { color: #f85149; }
+        .output-box .ok { color: #3fb950; }
+        .output-box .dim { color: #8b949e; }
+
+        /* DEBUG */
+        .debug-layout {
+            display: flex;
+            gap: 20px;
+        }
+        .debug-main {
+            flex: 2;
+        }
+        .debug-sidebar {
+            flex: 1;
+            min-width: 280px;
+            max-width: 380px;
+        }
+
+        .debug-panel {
+            background: #0d1117;
+            border: 1px solid var(--theme-border);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 12px;
+            transition: border-color 0.4s ease;
+            max-height: 250px;
+            overflow-y: auto;
+        }
+        .debug-panel h4 {
+            color: var(--theme-primary);
+            margin: 0 0 10px 0;
+            font-size: 0.95rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: color 0.4s ease;
+        }
+
+        .debug-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .debug-controls .btn-debug {
+            background: #161b22;
+            border: 1px solid var(--theme-border);
+            color: #e6edf3;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.85rem;
+            transition: 0.2s;
+        }
+        .debug-controls .btn-debug:hover:not(:disabled) {
+            border-color: var(--theme-primary);
+            background: #1c2333;
+        }
+        .debug-controls .btn-debug:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        .debug-controls .btn-debug.primary {
+            background: var(--theme-secondary);
+            border-color: var(--theme-secondary);
+            color: white;
+        }
+        .debug-controls .btn-debug.primary:hover:not(:disabled) {
+            filter: brightness(1.2);
+        }
+        .debug-controls .btn-debug.danger {
+            background: #da3633;
+            border-color: #da3633;
+            color: white;
+        }
+        .debug-controls .btn-debug.danger:hover:not(:disabled) {
+            background: #f85149;
+        }
+
+        .var-row {
+            padding: 3px 0;
+            font-size: 0.85rem;
+            border-bottom: 1px solid #161b22;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .var-row .var-name {
+            color: #ffa657;
+            font-weight: 500;
+        }
+        .var-row .var-value {
+            color: var(--theme-primary);
+            transition: color 0.4s ease;
+            font-weight: 500;
+        }
+        .var-row .var-type {
+            color: #8b949e;
+            font-size: 0.7rem;
+            background: #161b22;
+            padding: 0 6px;
+            border-radius: 4px;
+        }
+        .var-row.modified {
+            background: rgba(88, 166, 255, 0.08);
+            border-left: 3px solid var(--theme-primary);
+            padding-left: 6px;
+        }
+
+        .stack-frame {
+            padding: 3px 0;
+            font-size: 0.85rem;
+            border-bottom: 1px solid #161b22;
+            display: flex;
+            justify-content: space-between;
+        }
+        .stack-frame .frame-name {
+            color: #d2a8ff;
+        }
+        .stack-frame .frame-line {
+            color: #8b949e;
+        }
+        .stack-frame.current {
+            color: var(--theme-primary);
+            font-weight: bold;
+        }
+        .stack-frame.current .frame-name {
+            color: var(--theme-primary);
+        }
+
+        .breakpoint-item {
+            padding: 3px 0;
+            font-size: 0.85rem;
+            border-bottom: 1px solid #161b22;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .breakpoint-item .bp-line {
+            color: #da3633;
+            font-weight: bold;
+        }
+        .breakpoint-item .bp-condition {
+            color: #8b949e;
+            font-size: 0.75rem;
+            background: #161b22;
+            padding: 0 6px;
+            border-radius: 4px;
+        }
+        .breakpoint-item .bp-remove {
+            color: #da3633;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-size: 0.9rem;
+            padding: 0 4px;
+        }
+        .breakpoint-item .bp-remove:hover {
+            color: #f85149;
+        }
+
+        .debug-console {
+            background: #0a0e17;
+            border: 1px solid var(--theme-border);
+            border-radius: 8px;
+            margin-top: 12px;
+            overflow: hidden;
+            transition: border-color 0.4s ease;
+        }
+        .debug-console .console-output {
+            padding: 10px 15px;
+            max-height: 150px;
+            overflow-y: auto;
+            font-size: 0.85rem;
+            background: #0a0e17;
+            border-bottom: 1px solid var(--theme-border);
+            font-family: 'Cascadia Code', 'Fira Code', monospace;
+        }
+        .debug-console .console-output .console-line {
+            padding: 2px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 6px;
+        }
+        .debug-console .console-output .prompt {
+            color: var(--theme-primary);
+            font-weight: bold;
+            transition: color 0.4s ease;
+            min-width: 20px;
+        }
+        .debug-console .console-output .output {
+            color: #e6edf3;
+        }
+        .debug-console .console-output .error {
+            color: #f85149;
+        }
+        .debug-console .console-output .warning {
+            color: #d29922;
+        }
+        .debug-console .console-output .success {
+            color: #3fb950;
+        }
+        .debug-console .console-input-wrap {
+            display: flex;
+            padding: 8px 15px;
+            background: #0d1117;
+            align-items: center;
+        }
+        .debug-console .console-input-wrap .prompt {
+            color: var(--theme-primary);
+            margin-right: 10px;
+            font-weight: bold;
+            transition: color 0.4s ease;
+        }
+        .debug-console .console-input-wrap input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #e6edf3;
+            font-family: 'Cascadia Code', 'Fira Code', monospace;
+            font-size: 0.85rem;
+            outline: none;
+        }
+        .debug-console .console-input-wrap input::placeholder {
+            color: #8b949e;
+        }
+
+        /* METRICS */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 15px;
+        }
+        .metric-card {
+            background: #0d1117;
+            border: 1px solid var(--theme-border);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            transition: border-color 0.4s ease;
+        }
+        .metric-card .metric-label {
+            color: #8b949e;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .metric-card .metric-value {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: var(--theme-primary);
+            margin: 8px 0;
+            transition: color 0.4s ease;
+        }
+        .metric-card .metric-status.good { color: #3fb950; }
+        .metric-card .metric-status.warning { color: #d29922; }
+        .metric-card .metric-status.danger { color: #da3633; }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        .badge-info { background: var(--theme-primary); color: white; transition: background 0.4s ease; }
+        .badge-success { background: #3fb950; color: white; }
+
+        /* TOOLTIP */
+        .tooltip {
+            position: fixed;
+            background: #1c2333;
+            border: 2px solid var(--theme-primary);
+            border-radius: 8px;
+            padding: 14px 18px;
+            max-width: 600px;
+            color: #e6edf3;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.8);
+            pointer-events: none;
+            z-index: 9999;
+            display: none;
+            font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+            transition: border-color 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        .tooltip.visible {
+            display: block;
+            animation: tooltipFadeIn 0.2s ease;
+        }
+        @keyframes tooltipFadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .tooltip .tip-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+            font-size: 0.95rem;
+        }
+        .tooltip .tip-title.error { color: #f85149; }
+        .tooltip .tip-title.warning { color: #d29922; }
+        .tooltip .tip-title.info { color: var(--theme-primary); }
+        .tooltip .tip-title.style { color: #d2a8ff; }
+        .tooltip .tip-message {
+            margin: 6px 0;
+            color: #e6edf3;
+        }
+        .tooltip .tip-rule {
+            color: #8b949e;
+            font-size: 0.75rem;
+            margin-top: 4px;
+        }
+        .tooltip .tip-suggestion {
+            color: #3fb950;
+            margin-top: 8px;
+            border-top: 1px solid #30363d;
+            padding-top: 8px;
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+        }
+        .tooltip .tip-line {
+            color: #58a6ff;
+            font-size: 0.8rem;
+            margin-bottom: 4px;
+        }
+        .tooltip .tip-code {
+            background: #0a0e17;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            border: 1px solid #21262d;
+            margin: 4px 0;
+            color: #ffa657;
+            font-family: 'Cascadia Code', monospace;
+            max-height: 60px;
+            overflow-y: auto;
+        }
+
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--theme-border);
+            text-align: center;
+            color: #8b949e;
+            font-size: 0.9em;
+            transition: border-color 0.4s ease;
+        }
+
+        @media (max-width: 900px) {
+            .debug-layout {
+                flex-direction: column;
+            }
+            .debug-sidebar {
+                max-width: 100%;
+            }
+            .metrics-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .search-container {
+                flex-direction: column;
+            }
+            .search-container .search-group {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚡ PowerShell Pro Toolkit</h1>
+
+        <!-- TAB NAVIGATION -->
+        <div class="tab-nav">
+            <button class="tab-btn active" data-tab="analysis">
+                🔍 Analysis
+                <span class="badge badge-info" id="analysisBadge">0</span>
+            </button>
+            <button class="tab-btn" data-tab="debug" id="debugTabBtn" disabled>
+                🐞 Debug
+                <span class="badge badge-beta">Beta</span>
+            </button>
+            <button class="tab-btn" data-tab="metrics" id="metricsTabBtn">
+                📊 Metrics
+                <span class="badge badge-info" id="metricsBadge">0</span>
+            </button>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- TAB 1: ANALYSIS                                               -->
+        <!-- ============================================================ -->
+        <div class="tab-pane active" id="analysisTab">
+            <div class="cheatsheet-panel">
+                <h3>🔍 PSScriptAnalyzer Cheatsheet</h3>
+                <div class="cheatsheet-grid">
+                    <div class="cheat-item"><span class="cmd">Invoke-ScriptAnalyzer -Path script.ps1</span><div class="desc">Analyze script for issues</div></div>
+                    <div class="cheat-item"><span class="cmd">Invoke-ScriptAnalyzer -Path . -Recurse</span><div class="desc">Analyze entire directory</div></div>
+                    <div class="cheat-item"><span class="cmd">Invoke-ScriptAnalyzer -Fix</span><div class="desc">Auto-fix issues</div></div>
+                    <div class="cheat-item"><span class="cmd">Invoke-Formatter -Path script.ps1</span><div class="desc">Format code style</div></div>
+                    <div class="cheat-item"><span class="cmd">Get-ScriptAnalyzerRule</span><div class="desc">List all rules</div></div>
+                    <div class="cheat-item"><span class="cmd">-Severity Error/Warning/Info</span><div class="desc">Filter by severity</div></div>
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 10px;">
+                <div style="flex:1; min-width:200px; width:100%;">
+                    <div style="color:#8b949e; font-size:0.9rem;">
+                        <span class="badge badge-info">📝 Paste your PowerShell code below</span>
+                        <span class="badge badge-success">📂 or drag a .ps1 file</span>
+                    </div>
+
+                    <div class="code-editor-wrapper" id="codeEditorWrapper">
+                        <div class="line-numbers" id="lineNumbers"></div>
+                        <div class="code-editor">
+                            <textarea id="codeInput" spellcheck="false">function Get-Something {
+    Write-Host 'Hello'
+    $x = 5
+    if ($x -gt 3) {
+        Write-Host "x is $x"
+    }
+    return $x
+}</textarea>
+                        </div>
+                    </div>
+
+                    <!-- SEARCH CONTAINER -->
+                    <div class="search-container">
+                        <div class="search-group">
+                            <span class="search-icon">🔍</span>
+                            <label>Line:</label>
+                            <input type="text" id="lineSearch" placeholder="Go to line #" />
+                            <span class="search-count" id="lineSearchCount"></span>
+                        </div>
+                        <div class="search-group">
+                            <span class="search-icon">📝</span>
+                            <label>Text:</label>
+                            <input type="text" id="textSearch" placeholder="Search in code..." />
+                            <span class="search-count" id="textSearchCount">0 matches</span>
+                        </div>
+                        <button class="btn-search-nav" id="searchPrev" title="Previous match">↑</button>
+                        <button class="btn-search-nav" id="searchNext" title="Next match">↓</button>
+                        <button class="btn-search-nav" id="searchClear" title="Clear search">✕</button>
+                    </div>
+
+                    <div class="drop-zone" id="dropZoneInner">
+                        📁 Drop a .ps1 file here or click to browse
+                        <input type="file" id="fileInput" accept=".ps1,.psm1,.psd1" style="display:none;">
+                    </div>
+                    <div class="file-info" id="fileInfo"></div>
+                </div>
+
+                <div style="min-width:200px;">
+                    <div style="color:#8b949e; font-size:0.9rem; margin-bottom:6px;">🔽 Choose operation:</div>
+                    <div class="action-grid" id="actionGrid">
+                        <label><input type="radio" name="operation" value="analyze" checked> 🔍 Analyze <span class="operation-desc">(find issues)</span></label>
+                        <label><input type="radio" name="operation" value="fix"> 🔧 Auto-fix <span class="operation-desc">(fix what it can)</span></label>
+                        <label><input type="radio" name="operation" value="format"> ✨ Format <span class="operation-desc">(style only)</span></label>
+                    </div>
+                    <div style="margin-top:8px; display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
+                        <button class="btn-process" id="processBtn">▶ Process Code</button>
+                        <button class="btn-export" id="exportCsvBtn">📊 Export CSV</button>
+                        <button class="btn-export" id="exportJsonBtn">📋 Export JSON</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="output-box" id="outputBox">
+                <span class="dim">💡 Click "Process Code" to analyze your PowerShell script. Hover over highlighted line numbers for details! 😊</span>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- TAB 2: DEBUG                                                  -->
+        <!-- ============================================================ -->
+        <div class="tab-pane" id="debugTab">
+            <div class="cheatsheet-panel">
+                <h3>🐞 Debugger Cheatsheet</h3>
+                <div class="cheatsheet-grid">
+                    <div class="cheat-item"><span class="cmd">Set-PSBreakpoint -Line 5</span><div class="desc">Set breakpoint at line</div></div>
+                    <div class="cheat-item"><span class="cmd">Set-PSBreakpoint -Variable x</span><div class="desc">Break on variable change</div></div>
+                    <div class="cheat-item"><span class="cmd">$x | Get-Member</span><div class="desc">Inspect variable type</div></div>
+                    <div class="cheat-item"><span class="cmd">Get-PSCallStack</span><div class="desc">View call stack</div></div>
+                    <div class="cheat-item"><span class="cmd">step-over / step-into</span><div class="desc">Navigate execution</div></div>
+                    <div class="cheat-item"><span class="cmd">$Error[0] | Format-List</span><div class="desc">Inspect last error</div></div>
+                </div>
+            </div>
+
+            <div class="debug-layout">
+                <div class="debug-main">
+                    <div class="debug-controls">
+                        <button class="btn-debug primary" id="debugContinue">▶ Continue</button>
+                        <button class="btn-debug" id="debugStepOver">⏭ Step Over</button>
+                        <button class="btn-debug" id="debugStepInto">↘ Step Into</button>
+                        <button class="btn-debug" id="debugStepOut">⏏ Step Out</button>
+                        <button class="btn-debug danger" id="debugStop">⏹ Stop</button>
+                        <button class="btn-debug" id="debugReset">🔄 Reset</button>
+                        <button class="btn-debug" id="debugToggleBP">🔴 Toggle BP</button>
+                    </div>
+
+                    <div class="code-editor-wrapper">
+                        <div class="line-numbers" id="debugLineNumbers"></div>
+                        <div class="code-editor">
+                            <textarea id="debugCodeInput" spellcheck="false" disabled></textarea>
+                        </div>
+                    </div>
+
+                    <div class="debug-console">
+                        <div class="console-output" id="debugConsole">
+                            <div class="console-line"><span class="prompt">🔍</span> <span class="output">Debug session ready. Click "Continue" to start.</span></div>
+                        </div>
+                        <div class="console-input-wrap">
+                            <span class="prompt">PS&gt;</span>
+                            <input type="text" id="debugCommandInput" placeholder="Enter debug command (e.g., $x, Get-Variable)..." />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="debug-sidebar">
+                    <div class="debug-panel">
+                        <h4>📊 Variables <span class="badge badge-info" id="varCount">0</span></h4>
+                        <div id="debugVariables">
+                            <div class="var-row" style="color: #8b949e; font-size: 0.8rem;">No variables in scope</div>
+                        </div>
+                    </div>
+
+                    <div class="debug-panel">
+                        <h4>📚 Call Stack</h4>
+                        <div id="debugCallStack">
+                            <div class="stack-frame current"><span class="frame-name">▶ Main</span><span class="frame-line">line 1</span></div>
+                        </div>
+                    </div>
+
+                    <div class="debug-panel">
+                        <h4>🔴 Breakpoints <span class="badge badge-info" id="bpCount">0</span></h4>
+                        <div id="debugBreakpoints">
+                            <div style="color: #8b949e; font-size: 0.8rem;">Click line numbers to toggle</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- TAB 3: METRICS                                                -->
+        <!-- ============================================================ -->
+        <div class="tab-pane" id="metricsTab">
+            <div class="cheatsheet-panel">
+                <h3>📊 Metrics & Code Quality Cheatsheet</h3>
+                <div class="cheatsheet-grid">
+                    <div class="cheat-item"><span class="cmd">Cyclomatic Complexity</span><div class="desc">Number of independent paths (lower is better)</div></div>
+                    <div class="cheat-item"><span class="cmd">Maintainability Index</span><div class="desc">0-100 scale (higher is better)</div></div>
+                    <div class="cheat-item"><span class="cmd">Lines of Code</span><div class="desc">Total lines (comments excluded)</div></div>
+                    <div class="cheat-item"><span class="cmd">Nesting Depth</span><div class="desc">Maximum indentation level</div></div>
+                    <div class="cheat-item"><span class="cmd">Function Count</span><div class="desc">Number of defined functions</div></div>
+                    <div class="cheat-item"><span class="cmd">Parameter Count</span><div class="desc">Average parameters per function</div></div>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <button class="btn-process" id="calculateMetricsBtn">📊 Calculate Metrics</button>
+                <span style="color: #8b949e; margin-left: 12px; font-size: 0.9rem;">Analyze code quality and complexity</span>
+            </div>
+
+            <div class="metrics-grid" id="metricsGrid">
+                <div class="metric-card"><div class="metric-label">Cyclomatic Complexity</div><div class="metric-value" id="metricComplexity">-</div><div class="metric-status" id="metricComplexityStatus">Not calculated</div></div>
+                <div class="metric-card"><div class="metric-label">Maintainability Index</div><div class="metric-value" id="metricMaintainability">-</div><div class="metric-status" id="metricMaintainabilityStatus">Not calculated</div></div>
+                <div class="metric-card"><div class="metric-label">Lines of Code</div><div class="metric-value" id="metricLines">-</div><div class="metric-status" id="metricLinesStatus">Not calculated</div></div>
+                <div class="metric-card"><div class="metric-label">Nesting Depth</div><div class="metric-value" id="metricNesting">-</div><div class="metric-status" id="metricNestingStatus">Not calculated</div></div>
+                <div class="metric-card"><div class="metric-label">Functions Count</div><div class="metric-value" id="metricFunctions">-</div><div class="metric-status" id="metricFunctionsStatus">Not calculated</div></div>
+                <div class="metric-card"><div class="metric-label">Parameters Average</div><div class="metric-value" id="metricParams">-</div><div class="metric-status" id="metricParamsStatus">Not calculated</div></div>
+            </div>
+
+            <div style="margin-top: 20px; background: #0d1117; border: 1px solid var(--theme-border); border-radius: 8px; padding: 20px; transition: border-color 0.4s ease;">
+                <h3 style="color: var(--theme-primary); margin-bottom: 12px; transition: color 0.4s ease;">📋 Detailed Analysis</h3>
+                <div id="metricsDetailed" style="color: #8b949e; font-size: 0.9rem;">Run metrics calculation to see detailed breakdown.</div>
+            </div>
+        </div>
+
+        <!-- Tooltip -->
+        <div class="tooltip" id="tooltip">
+            <div class="tip-line" id="tipLine">Line 2</div>
+            <div class="tip-title" id="tipTitle">⚠️ Issue</div>
+            <div class="tip-message" id="tipMessage">Message</div>
+            <div class="tip-code" id="tipCode">Write-Host 'Hello'</div>
+            <div class="tip-rule" id="tipRule">Rule: PSAvoidUsingWriteHost</div>
+            <div class="tip-suggestion" id="tipSuggestion">💡 Suggestion: Use Write-Output instead</div>
+        </div>
+
+        <div class="footer">
+            <p>
+                📚 Documentation: <a href="#" style="color: var(--theme-primary);">docs.microsoft.com</a>
+                &nbsp;|&nbsp; 🐙 GitHub: <a href="#" style="color: var(--theme-primary);">github.com</a>
+                <br><span id="footerDate"></span>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // ============================================================
+            // DOM REFS
+            // ============================================================
+            const codeInput = document.getElementById('codeInput');
+            const debugCodeInput = document.getElementById('debugCodeInput');
+            const lineNumbers = document.getElementById('lineNumbers');
+            const debugLineNumbers = document.getElementById('debugLineNumbers');
+            const processBtn = document.getElementById('processBtn');
+            const outputBox = document.getElementById('outputBox');
+            const body = document.body;
+            const tooltip = document.getElementById('tooltip');
+
+            // Search elements
+            const lineSearch = document.getElementById('lineSearch');
+            const textSearch = document.getElementById('textSearch');
+            const searchPrev = document.getElementById('searchPrev');
+            const searchNext = document.getElementById('searchNext');
+            const searchClear = document.getElementById('searchClear');
+            const textSearchCount = document.getElementById('textSearchCount');
+            const lineSearchCount = document.getElementById('lineSearchCount');
+
+            // ============================================================
+            // STATE
+            // ============================================================
+            let currentIssues = [];
+            let breakpoints = new Set();
+            let searchMatches = [];
+            let currentSearchIndex = -1;
+            let debugState = {
+                running: false,
+                paused: false,
+                currentLine: 1,
+                variables: {},
+                callStack: ['Main'],
+                stepCount: 0
+            };
+            let hoverTimeout = null;
+            let isHovering = false;
+            let isScrolling = false;
+
+            // ============================================================
+            // ENHANCED POWER SHELL ANALYZER (Only detects PowerShell code)
+            // ============================================================
+            function analyzePowerShellCode(code) {
+                const issues = [];
+                const lines = code.split('\n');
+
+                // Skip analysis if code appears to be JavaScript/HTML
+                if (code.includes('function(') || code.includes('document.') || 
+                    code.includes('.addEventListener') || code.includes('console.log')) {
+                    return issues; // Return empty - not PowerShell
+                }
+
+                function findLineNum(pattern) {
+                    for (let i = 0; i < lines.length; i++) {
+                        if (lines[i].includes(pattern)) return i + 1;
+                    }
+                    return '?';
+                }
+
+                function findLineWithRegex(regex) {
+                    for (let i = 0; i < lines.length; i++) {
+                        if (regex.test(lines[i])) return i + 1;
+                    }
+                    return '?';
+                }
+
+                // === SECURITY RULES ===
+                if (/Invoke-Expression/.test(code)) {
+                    issues.push({
+                        severity: 'Error',
+                        rule: 'PSAvoidUsingInvokeExpression',
+                        message: "🚨 'Invoke-Expression' is dangerous! It can execute malicious code. Use the call operator & or Invoke-Command instead.",
+                        line: findLineNum('Invoke-Expression')
+                    });
+                }
+
+                if (/ConvertTo-SecureString.*-AsPlainText/.test(code) && /-Force/.test(code)) {
+                    issues.push({
+                        severity: 'Warning',
+                        rule: 'PSUseSecureString',
+                        message: "⚠️ Using '-AsPlainText' with '-Force' stores credentials insecurely. Consider using secure methods.",
+                        line: findLineNum('ConvertTo-SecureString')
+                    });
+                }
+
+                // === PERFORMANCE RULES ===
+                if (/Write-Host/.test(code)) {
+                    issues.push({
+                        severity: 'Warning',
+                        rule: 'PSAvoidUsingWriteHost',
+                        message: "⚠️ 'Write-Host' bypasses the pipeline and can't be captured. Use Write-Output or Write-Information instead.",
+                        line: findLineNum('Write-Host')
+                    });
+                }
+
+                if (/catch\s*\{[\s]*\}/.test(code)) {
+                    issues.push({
+                        severity: 'Warning',
+                        rule: 'PSAvoidUsingEmptyCatchBlock',
+                        message: "⚠️ Empty catch block swallows errors! At minimum, log the error with Write-Error or re-throw it.",
+                        line: findLineNum('catch')
+                    });
+                }
+
+                // === READABILITY & MAINTAINABILITY ===
+                if (!/<#/.test(code) && !/\.SYNOPSIS/.test(code) && /function\s+\w+/.test(code)) {
+                    issues.push({
+                        severity: 'Info',
+                        rule: 'PSProvideCommentHelp',
+                        message: "💡 Add comment-based help with .SYNOPSIS, .DESCRIPTION, .PARAMETER, .EXAMPLE for better documentation.",
+                        line: findLineNum('function')
+                    });
+                }
+
+                const funcMatch = code.match(/function\s+([A-Za-z]+)-/);
+                if (funcMatch) {
+                    const verb = funcMatch[1];
+                    const approved = ['Get', 'Set', 'Add', 'Remove', 'New', 'Invoke', 'Start', 'Stop', 'Export', 'Import', 
+                                    'Convert', 'Format', 'Test', 'Update', 'Clear', 'Connect', 'Disconnect', 'Read', 
+                                    'Write', 'Resolve', 'Send', 'Receive', 'Register', 'Unregister', 'Install', 'Uninstall'];
+                    if (!approved.includes(verb)) {
+                        issues.push({
+                            severity: 'Info',
+                            rule: 'PSUseApprovedVerbs',
+                            message: `💡 "${verb}" isn't on the approved verb list. Use one of: ${approved.slice(0, 10).join(', ')}... It makes your cmdlets more discoverable!`,
+                            line: findLineNum('function')
+                        });
+                    }
+                }
+
+                // Check for global variables
+                if (/\$global:/.test(code)) {
+                    issues.push({
+                        severity: 'Info',
+                        rule: 'PSAvoidGlobalVars',
+                        message: "💡 Global variables can cause conflicts. Consider using script scope or passing parameters instead.",
+                        line: findLineNum('$global:')
+                    });
+                }
+
+                // Check indentation
+                let indentIssues = 0;
+                for (let i = 0; i < lines.length; i++) {
+                    const l = lines[i];
+                    if (l.trim().length > 0 && !l.trim().startsWith('#') && !l.trim().startsWith('//')) {
+                        const leadingSpaces = l.length - l.trimStart().length;
+                        if (leadingSpaces % 4 !== 0 && leadingSpaces > 0) {
+                            indentIssues++;
+                            if (indentIssues <= 3) {
+                                issues.push({
+                                    severity: 'Style',
+                                    rule: 'PSUseConsistentIndentation',
+                                    message: `📐 Line ${i+1} has ${leadingSpaces} spaces — use multiples of 4 for consistent indentation.`,
+                                    line: i + 1
+                                });
+                            }
+                            break;
+                        }
+                    }
+                }
+
+                return issues;
+            }
+
+            // ============================================================
+            // AUTO-FIX FUNCTION
+            // ============================================================
+            function autoFixCode(code) {
+                let fixed = code;
+                const fixes = [];
+
+                // Fix Write-Host -> Write-Output
+                if (/Write-Host/.test(fixed)) {
+                    fixed = fixed.replace(/Write-Host/g, 'Write-Output');
+                    fixes.push('✅ Replaced Write-Host with Write-Output');
+                }
+
+                // Fix empty catch blocks
+                if (/catch\s*\{[\s]*\}/.test(fixed)) {
+                    fixed = fixed.replace(/catch\s*\{[\s]*\}/g, 'catch {\n    Write-Error $_\n    throw $_\n}');
+                    fixes.push('✅ Added error handling to empty catch block');
+                }
+
+                // Fix indentation (basic)
+                const lines = fixed.split('\n');
+                let indentLevel = 0;
+                const formattedLines = [];
+                for (let line of lines) {
+                    const trimmed = line.trim();
+                    if (trimmed.startsWith('}')) {
+                        indentLevel = Math.max(0, indentLevel - 1);
+                    }
+                    let newIndent = '    '.repeat(indentLevel);
+                    if (trimmed === '}' || trimmed === '})') {
+                        // keep as is
+                    } else if (trimmed.startsWith('}')) {
+                        // already adjusted
+                    }
+                    formattedLines.push(newIndent + trimmed);
+                    if (trimmed.endsWith('{') && !trimmed.includes('}')) {
+                        indentLevel += 1;
+                    }
+                    if (indentLevel < 0) indentLevel = 0;
+                }
+                fixed = formattedLines.join('\n');
+                if (fixed !== code) {
+                    fixes.push('✅ Reformatted indentation to 4 spaces');
+                }
+
+                return { fixed, fixes };
+            }
+
+            // ============================================================
+            // FORMAT FUNCTION
+            // ============================================================
+            function formatCode(code) {
+                const lines = code.split('\n');
+                let indentLevel = 0;
+                const formattedLines = [];
+                let changed = false;
+
+                for (let line of lines) {
+                    const trimmed = line.trim();
+                    if (trimmed.startsWith('}')) {
+                        indentLevel = Math.max(0, indentLevel - 1);
+                    }
+                    let newIndent = '    '.repeat(indentLevel);
+                    const originalIndent = line.length - line.trimStart().length;
+                    const newLine = newIndent + trimmed;
+                    if (originalIndent !== newIndent.length - trimmed.length) {
+                        changed = true;
+                    }
+                    formattedLines.push(newLine);
+                    if (trimmed.endsWith('{') && !trimmed.includes('}')) {
+                        indentLevel += 1;
+                    }
+                    if (indentLevel < 0) indentLevel = 0;
+                }
+
+                return {
+                    formatted: formattedLines.join('\n'),
+                    changed: changed
+                };
+            }
+
+            // ============================================================
+            // PROCESS BUTTON - With all three operations
+            // ============================================================
+            processBtn.addEventListener('click', function() {
+                const code = codeInput.value;
+                if (!code.trim()) {
+                    outputBox.innerHTML = `<span class="warn">⚠️ Oops! Please paste some PowerShell code first. 😊</span>`;
+                    return;
+                }
+
+                const operation = document.querySelector('input[name="operation"]:checked').value;
+                let output = '';
+                let resultCode = code;
+                let issues = [];
+
+                switch(operation) {
+                    case 'analyze':
+                        issues = analyzePowerShellCode(code);
+                        currentIssues = issues;
+                        
+                        if (issues.length === 0) {
+                            output = `✅ **Great news!** I didn't find any issues in your code. Keep up the good work! 🎉\n\n`;
+                            document.getElementById('debugTabBtn').disabled = false;
+                            document.getElementById('analysisBadge').textContent = '✅';
+                        } else {
+                            const errorCount = issues.filter(i => i.severity === 'Error').length;
+                            const warningCount = issues.filter(i => i.severity === 'Warning').length;
+                            const infoCount = issues.filter(i => i.severity === 'Info').length;
+                            const styleCount = issues.filter(i => i.severity === 'Style').length;
+                            
+                            output = `🔎 I found ${issues.length} item(s) to look at:\n`;
+                            output += `   🚨 Errors: ${errorCount} | ⚠️ Warnings: ${warningCount} | 💡 Info: ${infoCount} | 📐 Style: ${styleCount}\n\n`;
+                            
+                            for (const issue of issues) {
+                                const emoji = issue.severity === 'Error' ? '🚨' : 
+                                            issue.severity === 'Warning' ? '⚠️' : 
+                                            issue.severity === 'Style' ? '📐' : '💡';
+                                output += `${emoji} [${issue.severity}] **${issue.rule}** (line ${issue.line})\n`;
+                                output += `   📝 ${issue.message}\n\n`;
+                            }
+                            output += `💬 **Tip:** Start by fixing Errors first, then Warnings, then Style and Info items. Hover over highlighted line numbers for details! 😊\n`;
+                            document.getElementById('analysisBadge').textContent = issues.length;
+                        }
+                        break;
+
+                    case 'fix':
+                        const fixResult = autoFixCode(code);
+                        resultCode = fixResult.fixed;
+                        issues = analyzePowerShellCode(resultCode);
+                        currentIssues = issues;
+                        
+                        output = `🔧 **Auto-Fix Complete!**\n\n`;
+                        output += `📝 Changes made:\n`;
+                        for (const fix of fixResult.fixes) {
+                            output += `   ${fix}\n`;
+                        }
+                        if (fixResult.fixes.length === 0) {
+                            output += `   ℹ️ No changes needed - your code is already clean!\n`;
+                        }
+                        output += `\n📄 **Fixed code is now in the editor.**\n`;
+                        codeInput.value = resultCode;
+                        
+                        // Re-analyze after fix
+                        if (issues.length > 0) {
+                            output += `\n⚠️ ${issues.length} issue(s) remain that could not be auto-fixed:\n`;
+                            for (const issue of issues) {
+                                const emoji = issue.severity === 'Error' ? '🚨' : 
+                                            issue.severity === 'Warning' ? '⚠️' : 
+                                            issue.severity === 'Style' ? '📐' : '💡';
+                                output += `   ${emoji} ${issue.rule} (line ${issue.line})\n`;
+                            }
+                        } else {
+                            output += `\n✅ All issues have been resolved! Great job! 🎉`;
+                            document.getElementById('debugTabBtn').disabled = false;
+                            document.getElementById('analysisBadge').textContent = '✅';
+                        }
+                        break;
+
+                    case 'format':
+                        const formatResult = formatCode(code);
+                        resultCode = formatResult.formatted;
+                        
+                        if (formatResult.changed) {
+                            output = `✨ **Formatting Complete!**\n\n`;
+                            output += `📝 Reformatted code with consistent indentation (4 spaces).\n`;
+                            output += `📄 **Formatted code is now in the editor.**\n`;
+                            codeInput.value = resultCode;
+                            
+                            // Re-analyze after format
+                            issues = analyzePowerShellCode(resultCode);
+                            currentIssues = issues;
+                            if (issues.length === 0) {
+                                output += `\n✅ Code is now clean and properly formatted! 🎉`;
+                                document.getElementById('debugTabBtn').disabled = false;
+                                document.getElementById('analysisBadge').textContent = '✅';
+                            }
+                        } else {
+                            output = `✨ **Formatting Complete!**\n\n`;
+                            output += `ℹ️ Your code was already properly formatted. No changes needed.\n`;
+                            issues = analyzePowerShellCode(code);
+                            currentIssues = issues;
+                        }
+                        break;
+                }
+
+                outputBox.innerHTML = output.replace(/\n/g, '<br>').replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;');
+
+                // Update line numbers with highlights
+                const highlights = {};
+                for (const issue of issues) {
+                    const line = issue.line;
+                    if (line && line !== '?') {
+                        let cls = 'highlight-line';
+                        if (issue.severity === 'Error') cls = 'highlight-line-error';
+                        else if (issue.severity === 'Warning') cls = 'highlight-line-warning';
+                        else if (issue.severity === 'Info') cls = 'highlight-line-info';
+                        else if (issue.severity === 'Style') cls = 'highlight-line-style';
+                        highlights[line] = cls;
+                    }
+                }
+                updateLineNumbers(codeInput, lineNumbers, highlights);
+                syncCodeToDebug();
+            });
+
+            // ============================================================
+            // LINE NUMBER UPDATE
+            // ============================================================
+            function updateLineNumbers(editor, numContainer, highlightLines = null) {
+                const lines = editor.value.split('\n');
+                let html = '';
+                for (let i = 1; i <= lines.length; i++) {
+                    let cls = 'line-number';
+                    if (highlightLines && highlightLines[i]) {
+                        cls += ' ' + highlightLines[i];
+                    }
+                    if (breakpoints.has(i) && numContainer === debugLineNumbers) {
+                        cls += ' breakpoint-line';
+                    }
+                    const issue = currentIssues.find(iss => iss.line === i);
+                    const dataIssue = issue ? JSON.stringify(issue).replace(/"/g, '&quot;') : '';
+                    html += `<span class="${cls}" data-line="${i}" data-issue="${dataIssue}">${i}</span>`;
+                }
+                numContainer.innerHTML = html;
+            }
+
+            // ============================================================
+            // SCROLL SYNC
+            // ============================================================
+            function syncScroll(source, target) {
+                if (!source || !target) return;
+                const sourceScrollRatio = source.scrollTop / (source.scrollHeight - source.clientHeight);
+                if (!isNaN(sourceScrollRatio) && isFinite(sourceScrollRatio)) {
+                    target.scrollTop = sourceScrollRatio * (target.scrollHeight - target.clientHeight);
+                }
+            }
+
+            const textarea = codeInput;
+            const lineNumDiv = lineNumbers;
+
+            textarea.addEventListener('scroll', function() {
+                if (!isScrolling) {
+                    isScrolling = true;
+                    requestAnimationFrame(() => {
+                        syncScroll(this, lineNumDiv);
+                        isScrolling = false;
+                    });
+                }
+            });
+
+            // ============================================================
+            // TOOLTIP
+            // ============================================================
+            function showTooltip(e, issue, lineNum) {
+                if (!issue) return;
+
+                const titleEl = document.getElementById('tipTitle');
+                const msgEl = document.getElementById('tipMessage');
+                const ruleEl = document.getElementById('tipRule');
+                const suggestionEl = document.getElementById('tipSuggestion');
+                const lineEl = document.getElementById('tipLine');
+                const codeEl = document.getElementById('tipCode');
+
+                const sevMap = {
+                    'Error': { cls: 'error', emoji: '🚨' },
+                    'Warning': { cls: 'warning', emoji: '⚠️' },
+                    'Info': { cls: 'info', emoji: '💡' },
+                    'Style': { cls: 'style', emoji: '📐' }
+                };
+                const sev = sevMap[issue.severity] || { cls: 'info', emoji: '💡' };
+
+                titleEl.className = `tip-title ${sev.cls}`;
+                titleEl.textContent = `${sev.emoji} ${issue.severity}: ${issue.rule}`;
+                msgEl.textContent = issue.message;
+                ruleEl.textContent = `Rule: ${issue.rule}`;
+                lineEl.textContent = `📍 Line ${lineNum}`;
+
+                const lines = codeInput.value.split('\n');
+                if (lines[lineNum - 1]) {
+                    codeEl.textContent = lines[lineNum - 1].trim() || '(empty line)';
+                    codeEl.style.display = 'block';
+                } else {
+                    codeEl.style.display = 'none';
+                }
+
+                const suggestions = {
+                    'PSAvoidUsingWriteHost': '💡 Use Write-Output or Write-Information instead.\n📝 Example: Write-Output "Hello World"',
+                    'PSAvoidUsingInvokeExpression': '💡 Use the call operator & or Invoke-Command.\n📝 Example: & $commandString',
+                    'PSAvoidUsingEmptyCatchBlock': '💡 Add error handling inside catch.\n📝 Example: catch { Write-Error $_; throw }',
+                    'PSProvideCommentHelp': '💡 Add comment-based help.\n📝 Example: <# .SYNOPSIS Gets something .DESCRIPTION This function gets something #>',
+                    'PSUseApprovedVerbs': '💡 Use approved PowerShell verbs.\n📝 Example: Get-Item, Set-Content, Add-Member',
+                    'PSUseConsistentIndentation': '💡 Use 4 spaces for consistent indentation.',
+                    'PSAvoidGlobalVars': '💡 Use script scope or parameters instead of globals.\n📝 Example: $script:myVar or function Get-Something ($param)',
+                    'PSUseSecureString': '💡 Use secure methods for credentials.\n📝 Example: $cred = Get-Credential'
+                };
+
+                suggestionEl.textContent = suggestions[issue.rule] || '💡 Check the PSScriptAnalyzer documentation for more details.';
+
+                const rect = e.target.getBoundingClientRect();
+                let left = rect.right + 15;
+                let top = rect.top - 10;
+
+                const tooltipWidth = 600;
+                const tooltipHeight = 280;
+                if (left + tooltipWidth > window.innerWidth - 20) {
+                    left = rect.left - tooltipWidth - 15;
+                }
+                if (top + tooltipHeight > window.innerHeight - 20) {
+                    top = window.innerHeight - tooltipHeight - 20;
+                }
+                if (top < 10) top = 10;
+                if (left < 10) left = 10;
+
+                tooltip.style.left = left + 'px';
+                tooltip.style.top = top + 'px';
+                tooltip.style.display = 'block';
+                tooltip.classList.add('visible');
+                isHovering = true;
+            }
+
+            function hideTooltip() {
+                tooltip.style.display = 'none';
+                tooltip.classList.remove('visible');
+                isHovering = false;
+                if (hoverTimeout) {
+                    clearTimeout(hoverTimeout);
+                    hoverTimeout = null;
+                }
+            }
+
+            // ============================================================
+            // HOVER EVENTS
+            // ============================================================
+            lineNumbers.addEventListener('mouseenter', function(e) {
+                const target = e.target.closest('.line-number');
+                if (!target) return;
+                const issueData = target.dataset.issue;
+                if (!issueData) return;
+                try {
+                    const issue = JSON.parse(issueData);
+                    const lineNum = parseInt(target.dataset.line);
+                    if (hoverTimeout) {
+                        clearTimeout(hoverTimeout);
+                        hoverTimeout = null;
+                    }
+                    showTooltip(e, issue, lineNum);
+                } catch (err) {}
+            });
+
+            lineNumbers.addEventListener('mouseleave', function(e) {
+                const relatedTarget = e.relatedTarget;
+                if (!relatedTarget || !lineNumbers.contains(relatedTarget)) {
+                    hoverTimeout = setTimeout(hideTooltip, 300);
+                }
+            });
+
+            // ============================================================
+            // SEARCH
+            // ============================================================
+            function performTextSearch() {
+                const query = textSearch.value.trim();
+                const code = codeInput.value;
+                const lines = code.split('\n');
+                searchMatches = [];
+                currentSearchIndex = -1;
+
+                document.querySelectorAll('.search-match, .search-match-highlight').forEach(el => {
+                    el.classList.remove('search-match', 'search-match-highlight');
+                });
+
+                if (!query) {
+                    textSearchCount.textContent = '0 matches';
+                    return;
+                }
+
+                for (let i = 0; i < lines.length; i++) {
+                    if (lines[i].toLowerCase().includes(query.toLowerCase())) {
+                        searchMatches.push(i + 1);
+                    }
+                }
+
+                textSearchCount.textContent = `${searchMatches.length} matches`;
+
+                searchMatches.forEach(lineNum => {
+                    const span = lineNumbers.querySelector(`[data-line="${lineNum}"]`);
+                    if (span) {
+                        span.classList.add('search-match');
+                    }
+                });
+
+                if (searchMatches.length > 0) {
+                    currentSearchIndex = 0;
+                    highlightCurrentSearch();
+                    goToLine(searchMatches[0]);
+                }
+            }
+
+            function highlightCurrentSearch() {
+                document.querySelectorAll('.search-match-highlight').forEach(el => {
+                    el.classList.remove('search-match-highlight');
+                });
+
+                if (currentSearchIndex >= 0 && currentSearchIndex < searchMatches.length) {
+                    const lineNum = searchMatches[currentSearchIndex];
+                    const span = lineNumbers.querySelector(`[data-line="${lineNum}"]`);
+                    if (span) {
+                        span.classList.add('search-match-highlight');
+                    }
+                    textSearchCount.textContent = `${currentSearchIndex + 1}/${searchMatches.length} matches`;
+                }
+            }
+
+            function goToLine(lineNum) {
+                const lines = codeInput.value.split('\n');
+                if (lineNum >= 1 && lineNum <= lines.length) {
+                    let charPos = 0;
+                    for (let i = 0; i < lineNum - 1; i++) {
+                        charPos += lines[i].length + 1;
+                    }
+                    codeInput.focus();
+                    codeInput.setSelectionRange(charPos, charPos);
+                    const lineHeight = parseFloat(getComputedStyle(codeInput).lineHeight) || 20;
+                    const paddingTop = parseFloat(getComputedStyle(codeInput).paddingTop) || 15;
+                    codeInput.scrollTop = Math.max(0, (lineNum - 1) * lineHeight - paddingTop);
+                    requestAnimationFrame(() => {
+                        syncScroll(codeInput, lineNumbers);
+                    });
+                }
+            }
+
+            // ============================================================
+            // SEARCH EVENTS
+            // ============================================================
+            textSearch.addEventListener('input', performTextSearch);
+            textSearch.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    if (searchMatches.length > 0) {
+                        currentSearchIndex = (currentSearchIndex + 1) % searchMatches.length;
+                        highlightCurrentSearch();
+                        goToLine(searchMatches[currentSearchIndex]);
+                    }
+                }
+            });
+
+            searchNext.addEventListener('click', function() {
+                if (searchMatches.length > 0) {
+                    currentSearchIndex = (currentSearchIndex + 1) % searchMatches.length;
+                    highlightCurrentSearch();
+                    goToLine(searchMatches[currentSearchIndex]);
+                }
+            });
+
+            searchPrev.addEventListener('click', function() {
+                if (searchMatches.length > 0) {
+                    currentSearchIndex = (currentSearchIndex - 1 + searchMatches.length) % searchMatches.length;
+                    highlightCurrentSearch();
+                    goToLine(searchMatches[currentSearchIndex]);
+                }
+            });
+
+            searchClear.addEventListener('click', function() {
+                textSearch.value = '';
+                lineSearch.value = '';
+                performTextSearch();
+                lineSearchCount.textContent = '';
+                document.querySelectorAll('.search-match, .search-match-highlight').forEach(el => {
+                    el.classList.remove('search-match', 'search-match-highlight');
+                });
+            });
+
+            lineSearch.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const query = this.value.trim();
+                    if (!query) return;
+                    const lineNum = parseInt(query);
+                    if (!isNaN(lineNum) && lineNum > 0) {
+                        goToLine(lineNum);
+                        lineSearchCount.textContent = `→ ${lineNum}`;
+                        const span = lineNumbers.querySelector(`[data-line="${lineNum}"]`);
+                        if (span) {
+                            span.style.background = 'rgba(88, 166, 255, 0.3)';
+                            setTimeout(() => { span.style.background = ''; }, 1500);
+                        }
+                        const issue = currentIssues.find(i => i.line === lineNum);
+                        if (issue) {
+                            const fakeEvent = { target: span || lineNumbers };
+                            showTooltip(fakeEvent, issue, lineNum);
+                            setTimeout(hideTooltip, 4000);
+                        }
+                    } else {
+                        lineSearchCount.textContent = '❌ Invalid';
+                        setTimeout(() => { lineSearchCount.textContent = ''; }, 1500);
+                    }
+                }
+            });
+
+            // ============================================================
+            // SYNC CODE TO DEBUG
+            // ============================================================
+            function syncCodeToDebug() {
+                debugCodeInput.value = codeInput.value;
+                updateLineNumbers(debugCodeInput, debugLineNumbers);
+                detectAndUpdateVariables(codeInput.value);
+            }
+
+            function detectAndUpdateVariables(code) {
+                const varPattern = /\$([a-zA-Z_][a-zA-Z0-9_]*)/g;
+                const matches = code.match(varPattern);
+                const vars = matches ? [...new Set(matches)] : [];
+
+                if (vars.length === 0) {
+                    debugVariables.innerHTML = '<div class="var-row" style="color: #8b949e; font-size: 0.8rem;">No variables in scope</div>';
+                    document.getElementById('varCount').textContent = '0';
+                    return;
+                }
+
+                let html = '';
+                const values = {
+                    '$x': '5',
+                    '$name': '"Script"',
+                    '$y': '10',
+                    '$result': '15',
+                    '$i': '0'
+                };
+                const types = {
+                    '$x': 'int',
+                    '$name': 'string',
+                    '$y': 'int',
+                    '$result': 'int',
+                    '$i': 'int'
+                };
+
+                for (const v of vars) {
+                    const value = values[v] || '(undefined)';
+                    const type = types[v] || 'unknown';
+                    html += `<div class="var-row">
+                        <span class="var-name">${v}</span>
+                        <span>
+                            <span class="var-value">${value}</span>
+                            <span class="var-type">${type}</span>
+                        </span>
+                    </div>`;
+                }
+                debugVariables.innerHTML = html;
+                document.getElementById('varCount').textContent = vars.length;
+            }
+
+            // ============================================================
+            // METRICS
+            // ============================================================
+            function calculateMetrics(code) {
+                const lines = code.split('\n');
+                const totalLines = lines.length;
+                const codeLines = lines.filter(l => l.trim() && !l.trim().startsWith('#')).length;
+                const functions = code.match(/function\s+\w+/g) || [];
+                const funcCount = functions.length;
+
+                let maxNesting = 0;
+                let currentNesting = 0;
+                for (const line of lines) {
+                    if (line.includes('{')) currentNesting++;
+                    if (line.includes('}')) currentNesting--;
+                    if (currentNesting > maxNesting) maxNesting = currentNesting;
+                }
+
+                let complexity = 1;
+                const branching = code.match(/if|elseif|else|switch|for|foreach|while|do/g) || [];
+                complexity += branching.length;
+
+                const maintainability = Math.max(0, Math.min(100, 100 - (complexity * 2) - (funcCount * 3) + (codeLines * 0.5)));
+
+                document.getElementById('metricComplexity').textContent = complexity;
+                document.getElementById('metricComplexityStatus').textContent = complexity <= 5 ? '✅ Good' : complexity <= 10 ? '⚠️ Moderate' : '🔴 Complex';
+                document.getElementById('metricComplexityStatus').className = `metric-status ${complexity <= 5 ? 'good' : complexity <= 10 ? 'warning' : 'danger'}`;
+
+                document.getElementById('metricMaintainability').textContent = Math.round(maintainability);
+                document.getElementById('metricMaintainabilityStatus').textContent = maintainability >= 80 ? '✅ Excellent' : maintainability >= 60 ? '⚠️ Fair' : '🔴 Needs Work';
+                document.getElementById('metricMaintainabilityStatus').className = `metric-status ${maintainability >= 80 ? 'good' : maintainability >= 60 ? 'warning' : 'danger'}`;
+
+                document.getElementById('metricLines').textContent = codeLines;
+                document.getElementById('metricLinesStatus').textContent = codeLines <= 100 ? '✅ Good' : codeLines <= 500 ? '⚠️ Large' : '🔴 Very Large';
+                document.getElementById('metricLinesStatus').className = `metric-status ${codeLines <= 100 ? 'good' : codeLines <= 500 ? 'warning' : 'danger'}`;
+
+                document.getElementById('metricNesting').textContent = maxNesting;
+                document.getElementById('metricNestingStatus').textContent = maxNesting <= 3 ? '✅ Good' : maxNesting <= 5 ? '⚠️ Moderate' : '🔴 Deep';
+                document.getElementById('metricNestingStatus').className = `metric-status ${maxNesting <= 3 ? 'good' : maxNesting <= 5 ? 'warning' : 'danger'}`;
+
+                document.getElementById('metricFunctions').textContent = funcCount;
+                document.getElementById('metricFunctionsStatus').textContent = funcCount <= 10 ? '✅ Good' : funcCount <= 20 ? '⚠️ Many' : '🔴 Too Many';
+                document.getElementById('metricFunctionsStatus').className = `metric-status ${funcCount <= 10 ? 'good' : funcCount <= 20 ? 'warning' : 'danger'}`;
+
+                let totalParams = 0;
+                for (const func of functions) {
+                    const match = code.match(new RegExp(`function\\s+${func.split(' ')[1]}\\s*\\(([^)]*)\\)`));
+                    if (match && match[1]) {
+                        const params = match[1].split(',').filter(p => p.trim());
+                        totalParams += params.length;
+                    }
+                }
+                const avgParams = funcCount > 0 ? (totalParams / funcCount) : 0;
+                document.getElementById('metricParams').textContent = avgParams.toFixed(1);
+                document.getElementById('metricParamsStatus').textContent = avgParams <= 3 ? '✅ Good' : avgParams <= 5 ? '⚠️ Moderate' : '🔴 Many';
+                document.getElementById('metricParamsStatus').className = `metric-status ${avgParams <= 3 ? 'good' : avgParams <= 5 ? 'warning' : 'danger'}`;
+
+                document.getElementById('metricsDetailed').innerHTML = `
+                    <div style="margin-bottom: 8px;"><span style="color: var(--theme-primary);">📄 Total Lines:</span> ${totalLines}</div>
+                    <div style="margin-bottom: 8px;"><span style="color: var(--theme-primary);">💬 Comment Lines:</span> ${totalLines - codeLines}</div>
+                    <div style="margin-bottom: 8px;"><span style="color: var(--theme-primary);">🔀 Branches:</span> ${branching.length}</div>
+                    <div style="margin-bottom: 8px;"><span style="color: var(--theme-primary);">📦 Functions:</span> ${functions.map(f => f.split(' ')[1]).join(', ') || 'None'}</div>
+                    <div style="margin-bottom: 8px;"><span style="color: var(--theme-primary);">📊 Average Parameters:</span> ${avgParams.toFixed(1)}</div>
+                `;
+                document.getElementById('metricsBadge').textContent = '✅';
+            }
+
+            // ============================================================
+            // THEME MANAGEMENT
+            // ============================================================
+            function setTheme(theme) {
+                body.classList.remove('theme-analysis', 'theme-debug', 'theme-metrics');
+                body.classList.add(`theme-${theme}`);
+
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                    if (btn.dataset.tab === theme) {
+                        btn.classList.add('active');
+                    }
+                });
+
+                const tabs = {
+                    analysis: document.getElementById('analysisTab'),
+                    debug: document.getElementById('debugTab'),
+                    metrics: document.getElementById('metricsTab')
+                };
+                Object.keys(tabs).forEach(key => {
+                    tabs[key].classList.remove('active');
+                    if (key === theme) {
+                        tabs[key].classList.add('active');
+                    }
+                });
+            }
+
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const tab = this.dataset.tab;
+                    if (this.disabled) return;
+                    setTheme(tab);
+                    if (tab === 'debug') syncCodeToDebug();
+                    if (tab === 'metrics' && codeInput.value.trim()) {
+                        calculateMetrics(codeInput.value);
+                    }
+                });
+            });
+
+            // ============================================================
+            // DROP ZONE
+            // ============================================================
+            const dropZoneInner = document.getElementById('dropZoneInner');
+            const fileInput = document.getElementById('fileInput');
+            const fileInfo = document.getElementById('fileInfo');
+
+            dropZoneInner.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.classList.add('dragover');
+            });
+            dropZoneInner.addEventListener('dragleave', function(e) {
+                this.classList.remove('dragover');
+            });
+            dropZoneInner.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    const file = files[0];
+                    if (file.name.endsWith('.ps1') || file.name.endsWith('.psm1') || file.name.endsWith('.psd1')) {
+                        const reader = new FileReader();
+                        reader.onload = function(ev) {
+                            codeInput.value = ev.target.result;
+                            fileInfo.textContent = `📄 Loaded: ${file.name} (${file.size} bytes)`;
+                            updateLineNumbers(codeInput, lineNumbers);
+                            processBtn.click();
+                            performTextSearch();
+                        };
+                        reader.readAsText(file);
+                    } else {
+                        fileInfo.textContent = `⚠️ Please drop a .ps1, .psm1, or .psd1 file.`;
+                    }
+                }
+            });
+            dropZoneInner.addEventListener('click', function() {
+                fileInput.click();
+            });
+            fileInput.addEventListener('change', function(e) {
+                if (this.files.length > 0) {
+                    const file = this.files[0];
+                    const reader = new FileReader();
+                    reader.onload = function(ev) {
+                        codeInput.value = ev.target.result;
+                        fileInfo.textContent = `📄 Loaded: ${file.name} (${file.size} bytes)`;
+                        updateLineNumbers(codeInput, lineNumbers);
+                        processBtn.click();
+                        performTextSearch();
+                    };
+                    reader.readAsText(file);
+                }
+            });
+
+            // ============================================================
+            // METRICS BUTTON
+            // ============================================================
+            document.getElementById('calculateMetricsBtn').addEventListener('click', function() {
+                const code = codeInput.value;
+                if (!code.trim()) {
+                    alert('Please paste some code first!');
+                    return;
+                }
+                calculateMetrics(code);
+                setTheme('metrics');
+            });
+
+            // ============================================================
+            // EXPORT
+            // ============================================================
+            document.getElementById('exportCsvBtn').addEventListener('click', function() {
+                if (currentIssues.length === 0) {
+                    alert('No issues to export! Run analysis first.');
+                    return;
+                }
+                let csv = 'Severity,Rule,Message,Line\n';
+                for (const issue of currentIssues) {
+                    csv += `"${issue.severity}","${issue.rule}","${issue.message.replace(/"/g, '""')}","${issue.line}"\n`;
+                }
+                const blob = new Blob([csv], { type: 'text/csv' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'psscriptanalyzer-report.csv';
+                a.click();
+                URL.revokeObjectURL(url);
+            });
+
+            document.getElementById('exportJsonBtn').addEventListener('click', function() {
+                if (currentIssues.length === 0) {
+                    alert('No issues to export! Run analysis first.');
+                    return;
+                }
+                const json = JSON.stringify(currentIssues, null, 2);
+                const blob = new Blob([json], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'psscriptanalyzer-report.json';
+                a.click();
+                URL.revokeObjectURL(url);
+            });
+
+            // ============================================================
+            // DEBUG CONTROLS (simplified but functional)
+            // ============================================================
+            const debugConsole = document.getElementById('debugConsole');
+            const debugCommandInput = document.getElementById('debugCommandInput');
+            const debugVariables = document.getElementById('debugVariables');
+            const debugCallStack = document.getElementById('debugCallStack');
+            const debugBreakpoints = document.getElementById('debugBreakpoints');
+
+            function addDebugOutput(text, type = 'output') {
+                const output = document.createElement('div');
+                output.className = 'console-line';
+                const promptMap = {
+                    'output': 'ℹ️',
+                    'error': '❌',
+                    'warning': '⚠️',
+                    'success': '✅',
+                    'input': '>'
+                };
+                const prompt = promptMap[type] || 'ℹ️';
+                const cls = type === 'error' ? 'error' : type === 'warning' ? 'warning' : type === 'success' ? 'success' : 'output';
+                output.innerHTML = `<span class="prompt">${prompt}</span> <span class="${cls}">${text}</span>`;
+                debugConsole.appendChild(output);
+                debugConsole.scrollTop = debugConsole.scrollHeight;
+            }
+
+            document.getElementById('debugContinue').addEventListener('click', function() {
+                if (!debugState.running) {
+                    debugState.running = true;
+                    debugState.stepCount = 0;
+                    addDebugOutput('▶ Debug session started!', 'success');
+                }
+                debugState.stepCount++;
+                debugState.currentLine = Math.min(debugState.currentLine + 1, codeInput.value.split('\n').length);
+                addDebugOutput(`⏭ Executed line ${debugState.currentLine} (step ${debugState.stepCount})`, 'output');
+                if (debugState.currentLine >= codeInput.value.split('\n').length) {
+                    addDebugOutput('🏁 Execution completed!', 'success');
+                    debugState.running = false;
+                    debugState.currentLine = 1;
+                }
+            });
+
+            document.getElementById('debugStepOver').addEventListener('click', function() {
+                if (!debugState.running) {
+                    addDebugOutput('⚠️ Start debug session first (Continue)', 'warning');
+                    return;
+                }
+                addDebugOutput('⏭ Step over (simulated)', 'output');
+            });
+
+            document.getElementById('debugStepInto').addEventListener('click', function() {
+                if (!debugState.running) {
+                    addDebugOutput('⚠️ Start debug session first (Continue)', 'warning');
+                    return;
+                }
+                addDebugOutput('↘ Step into (simulated)', 'output');
+            });
+
+            document.getElementById('debugStepOut').addEventListener('click', function() {
+                if (!debugState.running) {
+                    addDebugOutput('⚠️ Start debug session first (Continue)', 'warning');
+                    return;
+                }
+                addDebugOutput('⏏ Step out (simulated)', 'output');
+            });
+
+            document.getElementById('debugStop').addEventListener('click', function() {
+                debugState.running = false;
+                debugState.currentLine = 1;
+                debugState.stepCount = 0;
+                addDebugOutput('⏹ Debug session stopped', 'error');
+            });
+
+            document.getElementById('debugReset').addEventListener('click', function() {
+                debugState.running = false;
+                debugState.currentLine = 1;
+                debugState.stepCount = 0;
+                addDebugOutput('🔄 Debug session reset', 'warning');
+                debugConsole.innerHTML = '<div class="console-line"><span class="prompt">🔍</span> <span class="output">Debug session reset.</span></div>';
+            });
+
+            document.getElementById('debugToggleBP').addEventListener('click', function() {
+                const line = debugState.currentLine;
+                if (breakpoints.has(line)) {
+                    breakpoints.delete(line);
+                    addDebugOutput(`🔴 Removed breakpoint at line ${line}`, 'warning');
+                } else {
+                    breakpoints.add(line);
+                    addDebugOutput(`🔴 Set breakpoint at line ${line}`, 'warning');
+                }
+                updateBreakpoints();
+            });
+
+            function updateBreakpoints() {
+                if (breakpoints.size === 0) {
+                    debugBreakpoints.innerHTML = '<div style="color: #8b949e; font-size: 0.8rem;">Click line numbers to toggle</div>';
+                    document.getElementById('bpCount').textContent = '0';
+                    return;
+                }
+                let html = '';
+                for (const line of breakpoints) {
+                    html += `<div class="breakpoint-item">
+                        <span class="bp-line">🔴 Line ${line}</span>
+                        <span class="bp-condition">Active</span>
+                    </div>`;
+                }
+                debugBreakpoints.innerHTML = html;
+                document.getElementById('bpCount').textContent = breakpoints.size;
+            }
+
+            debugCommandInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    const cmd = this.value.trim();
+                    if (cmd) {
+                        addDebugOutput(`> ${cmd}`, 'input');
+                        if (cmd.toLowerCase() === 'help') {
+                            addDebugOutput('💡 Commands: $variable, get-variable, get-callstack, help, clear', 'output');
+                        } else if (cmd.toLowerCase() === 'clear') {
+                            debugConsole.innerHTML = '<div class="console-line"><span class="prompt">🔍</span> <span class="output">Console cleared.</span></div>';
+                        } else if (cmd.startsWith('$')) {
+                            addDebugOutput(`📊 ${cmd} = (value)`, 'output');
+                        } else {
+                            addDebugOutput(`⚠️ Command '${cmd}' not recognized. Try: help`, 'warning');
+                        }
+                        this.value = '';
+                    }
+                }
+            });
+
+            // ============================================================
+            // INIT
+            // ============================================================
+            updateLineNumbers(codeInput, lineNumbers);
+            document.getElementById('footerDate').textContent = 'Generated: ' + new Date().toLocaleString();
+            setTheme('analysis');
+
+            setTimeout(() => {
+                processBtn.click();
+                performTextSearch();
+                syncCodeToDebug();
+                updateBreakpoints();
+            }, 500);
+
+            console.log('🚀 PowerShell Pro Toolkit loaded!');
+            console.log('✅ Features: Analysis, Auto-Fix, Format, Debug, Metrics');
+            console.log('💡 Try different operations using the radio buttons!');
+        })();
+    </script>
+</body>
+</html>
